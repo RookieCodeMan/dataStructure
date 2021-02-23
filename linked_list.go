@@ -4,79 +4,84 @@ import (
 	"fmt"
 )
 
+type Object interface {} // 空接口类型
+
+
 type Node struct {
-	Val int
+	Data Object
 	Next *Node
 }
 
+type SingleLinkedList struct {
+	headNode * Node // 头节点
+}
 
-// 在链表的最后插入节点
-func InsertNode(head * Node, newNode * Node){
-	// 思路，先找当最后一个节点，将新的节点加入到链表最后
-	curNode := head
-	for {
-		if curNode.Next == nil{
-			break
-		}
-		curNode = curNode.Next
+// 判断链表是否为空, 结构体方法
+func (linkedList * SingleLinkedList) IsEmpty() bool{
+	if linkedList.headNode == nil{
+		return true
+	} else {
+		return false
 	}
-	// 将新的节点加到链表最后
-	curNode.Next = newNode
+}
 
+// 获取链表长度
+func (linkedList * SingleLinkedList) LengthOfList() int {
+	if linkedList.IsEmpty() {
+		return 0
+	} else {
+		count := 0
+		cur := linkedList.headNode
+		for cur != nil{
+			count ++
+			cur = cur.Next
+		}
+		return count
+	}
+}
+
+// 从链表尾部添加元素
+func (linkedList * SingleLinkedList) AppendNode(data Object) {
+	node := &Node{Data: data} //
+	if linkedList.IsEmpty() {
+		linkedList.headNode = node
+	} else {
+		cur := linkedList.headNode
+		for cur.Next != nil{
+			cur = cur.Next
+		}
+		cur.Next = node
+	}
 }
 
 // 遍历链表
-func ListNode(head *Node) {
-	if head.Next != nil {
-		curNode := head.Next
-		for {
-			fmt.Println(curNode.Val)
-			if curNode.Next == nil {
-				break
-			}
-			curNode = curNode.Next
+func (linkedList * SingleLinkedList) ShowList(){
+	if ! linkedList.IsEmpty() {
+		cur := linkedList.headNode
+		for cur != nil {
+			fmt.Println(cur.Data)
+			cur = cur.Next
 		}
 	}
 }
 
-// 统计链表长度
-func LengthOfList(head *Node) int{
-	if head.Next == nil{
-		return 0
-	} else {
-		length := 0
-		curNode := head.Next // 表示第一个节点
-		for {
-			if curNode == nil {
+// 删除链表指定值的元素
+func (linkedList * SingleLinkedList) RemoveNode(data Object){
+	if ! linkedList.IsEmpty() {
+		cur := linkedList.headNode
+		pre := linkedList.headNode
+		for cur != nil {
+			if data == cur.Data{ // 找到了
+				if cur == linkedList.headNode{ // 是头节点
+					linkedList.headNode = cur.Next
+				} else { // 不是头节点
+					pre.Next = cur.Next
+				}
 				break
-			}
-			curNode = curNode.Next
-			length ++
-		}
-		return length
-	}
-}
 
-// 删除节点
-func DeleteNode(head *Node, value int) {
-	if head.Next != nil{
-		curNode := head.Next // 当前节点
-		preCurNode := head.Next // 上一个节点
-		for {
-			if curNode.Val == value{ // 找到了
-				if curNode == head.Next{ // 是否是头节点
-					head.Next = curNode.Next
-					break
-				} else {
-					preCurNode.Next = curNode.Next
-					break
-				}
-			} else { // 未找到，继续往下个节点找
-				preCurNode = curNode
-				curNode = curNode.Next
-				if curNode == nil{
-					break
-				}
+			} else { // 未找到 继续往后找
+				pre = cur
+				cur = cur.Next
 			}
 		}
 	}
