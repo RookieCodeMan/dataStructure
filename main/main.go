@@ -27,4 +27,9 @@ func main(){
 	l := list.LengthOfList()
 	fmt.Println("LengthOfList:", l)
 
+
+	fmt.Println("========revert=========")
+	revertList := list.ReversedLinkedList()
+	revertList.ShowList()
+
 }

@@ -44,6 +44,7 @@ func (linkedList * SingleLinkedList) LengthOfList() int {
 func (linkedList * SingleLinkedList) AppendNode(data Object) {
 	node := &Node{Data: data} //
 	if linkedList.IsEmpty() {
+		// 将headNode指向第一个节点node
 		linkedList.headNode = node
 	} else {
 		cur := linkedList.headNode
@@ -85,4 +86,34 @@ func (linkedList * SingleLinkedList) RemoveNode(data Object){
 			}
 		}
 	}
+}
+
+
+// 反转链表
+// 1->2->3->4->5
+// 5->4->3->2->1
+// 第一次  nil<-1
+// 第二次  nil<-1<-2
+// 第三次  nil<-1<-2<-3
+// 第四次  nil<-1<-2<-3<-4
+// 第五次  nil<-1<-2<-3<-4<-5
+func (linkedList * SingleLinkedList) ReversedLinkedList() *SingleLinkedList{
+
+	reverseHead := &SingleLinkedList{}
+	curNode := linkedList.headNode
+	var preNode *Node = nil
+	for curNode != nil {
+
+		nextNode := curNode.Next
+		if nextNode == nil{
+			reverseHead.headNode = curNode
+		}
+
+		curNode.Next = preNode
+		preNode = curNode
+		curNode = nextNode
+
+	}
+
+	return reverseHead
 }
